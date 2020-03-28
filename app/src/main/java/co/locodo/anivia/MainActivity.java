@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -43,7 +42,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawer = null;
@@ -122,50 +120,20 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton swit, boolean onoff) {
                     KakaoBot.saveData("botOn", String.valueOf(onoff));
-                    if (onoff) toast("카카오톡 봇이 활성화되었습니다.");
-                    else toast("카카오톡 봇이 비활성화되었습니다.");
+                    if (onoff) {
+                        toast("카카오톡 봇이 활성화되었습니다.");
+                        startService(new Intent(getApplicationContext(), SocketService.class));
+                    }
+                    else {
+                        toast("카카오톡 봇이 비활성화되었습니다.");
+                        BusProvider.getInstance().post(SocketService.BusEventType.StopService);
+                    }
                 }
             });
             layout.addView(on);
 
             updateData();
 
-            final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, names);
-
-            Button add = new Button(this);
-            add.setText("추가");
-            add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editDialog(adapter);
-                }
-            });
-            add.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    adapter.notifyDataSetChanged();
-                    return true;
-                }
-            });
-            layout.addView(add);
-
-            ListView list = new ListView(this);
-            list.setAdapter(adapter);
-            list.setFastScrollEnabled(true);
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                    //질문::::대답:::대답:::대답:::방확인::::방이름::::포함인지::::방종류
-                    String[] c = data[pos].split("::::");
-                    int[] mode = {Integer.valueOf(c[4]), Integer.valueOf(c[5])};
-                    boolean roomCheck = false;
-                    if (c[2].equals("true")) roomCheck = true;
-                    else c[3] = null;
-                    //title, que, ans, room, mode, roomCheck
-                    editDialog(c[0], c[0], c[1].replaceAll(":::", "[[다음채팅]]"), c[3], mode, new boolean[]{roomCheck}, adapter, pos);
-                }
-            });
-            layout.addView(list);
             pad = dip2px(20);
             layout.setPadding(pad, pad, pad, pad);
             layout0.addView(layout);

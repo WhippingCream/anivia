@@ -62,12 +62,6 @@ public class KakaoBot extends Application {
             File file = new File(sdcard+"/KakaoBot/"+name+".txt");
             if(file.exists()) file.delete();
         } catch (Exception e) {
-            //toast(e.toString());
         }
     }
-
-    private static void toast(String msg) {
-        Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
-    }
-
 }

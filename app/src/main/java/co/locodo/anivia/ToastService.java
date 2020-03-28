@@ -7,11 +7,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-public class MainService extends Service {
+public class ToastService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String fuck = intent.getStringExtra("toast");
-        if(fuck!=null) Toast.makeText(this, fuck, Toast.LENGTH_SHORT).show();
+        String msg = intent.getStringExtra("toast");
+        if (msg != null)
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         return START_NOT_STICKY;
     }
 
