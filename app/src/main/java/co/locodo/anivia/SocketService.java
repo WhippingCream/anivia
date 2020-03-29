@@ -18,9 +18,9 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+import com.github.nkzawa.emitter.Emitter;
 
 public class SocketService extends IntentService
 {
@@ -33,6 +33,11 @@ public class SocketService extends IntentService
     private HashMap<Integer, Notification.Action> notiMap = new HashMap<>();
 
     private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket(Constants.SOCKET_URL);
+        } catch (URISyntaxException e) {}
+    }
 
     public SocketService() {
         super("SocketService");
